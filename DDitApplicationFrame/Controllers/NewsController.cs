@@ -1,4 +1,5 @@
-﻿using DDit.Core.Data.Entity.CoreEntity;
+﻿using DDit.Core.Data.Entity;
+using DDit.Core.Data.Entity.CoreEntity;
 using DDitApplicationFrame.Common;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,24 @@ namespace DDitApplicationFrame.Controllers
             // JsonResult是本人自己封装的方法，
             // 解析tuple 并返回JSON格式的信息,具体看BaseController 里面的方法实现
             return this.JsonResult(result);
-        } 
+        }
+
+        [HttpPost]
+        public ActionResult AddorEditNewsInfo(News newsModel)
+        {
+       
+            if (newsModel.NewId == 0)
+            {
+                //newsModel.CreateTime = DateTime.Now;
+                this.NewService.AddNews(newsModel);
+            }
+            else
+            {
+                //this.NewService.ModifyNews(userModel);
+            }
+
+            return Json(new ResultEntity { result = true });
+        }
 
     }
 }

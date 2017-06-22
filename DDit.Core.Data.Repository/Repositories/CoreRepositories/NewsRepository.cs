@@ -44,5 +44,15 @@ namespace DDit.Core.Data.Repository.Repositories.CoreRepositories
                 return new Tuple<int, List<News>>(count, result);
             }
         }
+
+        public void AddNews(News model)
+        {
+            using (UnitOfWork dal = BaseInfo._container.Resolve<UnitOfWork>())
+            {
+
+                dal.GetRepository<News>().Insert(model);
+                dal.Save();
+            }
+        }
     }
 }

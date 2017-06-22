@@ -10,5 +10,7 @@ namespace DDit.Core.Data.IRepositories.ICoreRepositories
    public interface INewsRepository
     {
        Tuple<int, List<News>> GetNewsList(News model);
+
+        void AddNews(News model);
     }
 }

@@ -31,13 +31,91 @@
                 }
             ]
         });
+
+        //查询按钮
+        $("#newQuery").click(function () {
+            table.ajax.reload();
+        })
+
+        //弹出用户信息层
+        var openCreateNewsLayer = function () {
+            mainLayer = parent.layer.open({
+                type: 1,
+                title: "新增新闻",
+                area: ['550px', '460px'],
+                closeBtn: 1,
+                shadeClose: false,
+                skin: 'layerStyle',
+                content: $("#newsLayer").html(),
+                btn: [dditConfig.btn.close, dditConfig.btn.comfrie],
+                yes: function (index, layero) {
+                    confrimBtn(index);
+                },
+                success: function (i, l) {
+                    parent.$("#Newsform").FromEvent(function () {
+                        //验证表单
+                        $("#Newsform").validate({
+                            rules: {
+                                NewTitle: {
+                                    required: true
+                                }
+                            },
+                            messages: {
+                                NewTitle: {
+                                    required: "必填"
+                                }
+                            },
+                            highlight: function (element) {
+                                $(element).closest('.form-group').addClass('has-error');
+                            },
+                            success: function (label) {
+                                label.closest('.form-group').removeClass('has-error');
+                                label.remove();
+                            }
+                        })
+                    })
+                }
+            });
+        }
+
+        //新增或修改确认按钮
+        var confrimBtn = function (index) {
+            var newsid = parent.$("#NewId").val();
+            var newsForm = parent.$("#Newsform");
+            if (newsForm.valid()) {
+                var loading = parent.layer.load(2);
+                newsForm.ajaxSubmit({
+                    dataType: "json",
+                    success: function (data) {
+                        parent.layer.close(loading);
+                        if (data.result) {
+                            parent.layer.close(index); //隐藏弹出
+                            table.ajax.reload(null, newsid == "" ? true : false);
+                            alertify.success("操作成功！"); //弹出消息日志
+                        } else {
+                            alertify.error(data.message);
+                        }
+                    },
+                    error: function (data) {
+                        parent.layer.close(loading);
+                        var obj = eval('(' + data.responseText + ')');
+                        alertify.error(obj.message);
+                    }
+                });
+            }
+        }
+
+        //新增按钮操作
+        $("#newsCreate").click(function () {
+            openCreateNewsLayer();
+        });
     })
 </script>
 
 <div class="margin w100f xoverhide">
     <div class="panel panel-default" style="margin-top: 10px">
         <ul class="list-group">
-            @Html.Action("CreateButtonByMuen", "Button", new { menuId =46, mark = "news" })
+            @Html.Action("CreateButtonByMuen", "Button", new { menuId =35, mark = "news" })
             <li class="list-group-item">
                 <form class="form-inline">
                     <div class="form-group">
@@ -53,4 +131,28 @@
     </div>
 
     <table id="NewTable" class="table table-bordered table-striped w100f" cellspacing="0"></table>
+</div>
+
+<div id="newsLayer" class="displayn">
+    <form class="form-horizontal formPadding" id="Newsform" method="post" action="/News/AddorEditNewsInfo">
+        @Html.Hidden("NewId")
+        <div class="form-group">
+            <label for="NewTitle" class="col-sm-2 control-label labsty">标题<span style="color:red">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" maxlength="15" name="NewTitle" id="NewTitle" placeholder="标题">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="NewContent" class="col-sm-2 control-label labsty">正文&nbsp;&nbsp;</label>
+            <div class="col-sm-10 pad-r20">
+                <input type="text" class="form-control" name="NewContent" maxlength="200" id="NewContent">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="NewAuthor" class="col-sm-2 control-label labsty">作者<span style="color:red">*</span></label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" maxlength="15" name="NewAuthor" id="NewAuthor" placeholder="作者">
+            </div>
+        </div>
+    </form>
 </div>
