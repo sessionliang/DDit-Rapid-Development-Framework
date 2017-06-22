@@ -45,3 +45,19 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Project Ignore List
+/.vs
+/DDit.Component.Data/obj/Debug
+/DDit.Component.Data/bin/Debug
+/DDit.Component.Tools/obj/Debug
+/DDit.Component.Tools/bin/Debug
+/DDit.Core.Data/obj/Debug
+/DDit.Core.Data/bin/Debug
+/DDit.Core.Data.Repository/obj/Debug
+/DDit.Core.Data.Repository/bin/Debug
+/DDitApplicationFrame/obj/Debug
+/DDitApplicationFrame/bin
+/packages
+**/*.csproj.user
+/DDitApplicationFrame/log
